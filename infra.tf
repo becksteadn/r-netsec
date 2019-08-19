@@ -4,8 +4,8 @@ provider "aws" {
 
 resource "aws_lambda_function" "r-netsec" {
     function_name = "r-netsec"
-    filename = "function/build/build.zip"
-    source_code_hash = "${filebase64sha256("function/build/build.zip")}"
+    filename = "function/build.zip"
+    source_code_hash = "${filebase64sha256("function/build.zip")}"
     role = "${aws_iam_role.r-netsec.arn}"
     handler = "main.handler"
     runtime = "python3.7"
