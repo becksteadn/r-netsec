@@ -1,6 +1,7 @@
 # Project specific
 *.zip
 *.terraform*
+*.tfstate*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
