@@ -13,7 +13,7 @@ resource "aws_lambda_function" "r-netsec" {
     environment {
         variables {
             GH_USERNAME = "r-netsec"
-            GH_PASSWORD = ""
+            GH_PASSWORD = "changeme"
         }
     }
 }
