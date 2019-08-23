@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_rule" "netsec-schedule" {
     schedule_expression = "rate(30 minutes)"
 }
 
-resource "aws_cloudwatch_event_target" "" {
+resource "aws_cloudwatch_event_target" "cw-target" {
     rule = "${aws_cloudwatch_event_rule.netsec-schedule.name}"
     target_id = "r-netsec"
     arn = "${aws_lambda_function.r-netsec.arn}"
@@ -43,6 +43,23 @@ resource "aws_iam_role" "r-netsec" {
             },
             "Effect": "Allow",
             "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "CloudWatchPublish" {
+    policy =<<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:*"
+            ],
+            "Resource": "arn:aws:logs:*:*:*"
         }
     ]
 }
