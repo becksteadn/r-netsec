@@ -2,6 +2,10 @@ provider "aws" {
     region = "us-east-1"
 }
 
+variable "token" {
+    description = "GitHub API access token"
+}
+
 resource "aws_lambda_function" "r-netsec" {
     function_name = "r-netsec"
     filename = "function/build.zip"
@@ -11,9 +15,9 @@ resource "aws_lambda_function" "r-netsec" {
     runtime = "python3.7"
     timeout = "5"
     environment {
-        variables {
+        variables = {
             GH_USERNAME = "r-netsec"
-            GH_PASSWORD = "changeme"
+            GH_PASSWORD = "${var.token}"
         }
     }
 }
@@ -64,4 +68,10 @@ resource "aws_iam_policy" "CloudWatchPublish" {
     ]
 }
 EOF
+}
+
+resource "aws_iam_policy_attachment" "publish-attach" {
+    name = "CloudWatchPublish"
+    roles = ["${aws_iam_role.r-netsec.name}"]
+    policy_arn = "${aws_iam_policy.CloudWatchPublish.arn}"
 }

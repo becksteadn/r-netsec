@@ -1,9 +1,9 @@
-pack:
+build:
 	cd function; \
 	zip -9qr build.zip .;
 
 apply:
 	terraform apply
 
-update: pack
+update: build
 	terraform apply
