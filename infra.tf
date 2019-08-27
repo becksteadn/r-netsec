@@ -8,8 +8,8 @@ variable "token" {
 
 resource "aws_lambda_function" "r-netsec" {
     function_name = "r-netsec"
-    filename = "function/build.zip"
-    source_code_hash = "${filebase64sha256("function/build.zip")}"
+    filename = "function/build/build.zip"
+    source_code_hash = "${filebase64sha256("function/build/build.zip")}"
     role = "${aws_iam_role.r-netsec.arn}"
     handler = "main.handler"
     runtime = "python3.7"
@@ -74,4 +74,12 @@ resource "aws_iam_policy_attachment" "publish-attach" {
     name = "CloudWatchPublish"
     roles = ["${aws_iam_role.r-netsec.name}"]
     policy_arn = "${aws_iam_policy.CloudWatchPublish.arn}"
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+    statement_id = "AllowExecutionFromCloudWatch"
+    action = "lambda:InvokeFunction"
+    function_name = "${aws_lambda_function.r-netsec.function_name}"
+    principal = "events.amazonaws.com"
+    source_arn = "${aws_cloudwatch_event_rule.netsec-schedule.arn}"
 }
